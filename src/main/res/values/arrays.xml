@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<array name="theme">
+		<item>Стандартный</item>
+		<item>Синий</item>
+		<item>Красный</item>
+	</array>
+	<array name="v_theme">
+		<item>Light</item>
+		<item>Dark</item>
+		<item>red</item>
+	</array>
+	<array name="v_gravity">
+		<item>bottom</item>
+		<item>center</item>
+		<item>top</item>
+	</array>
+</resources>

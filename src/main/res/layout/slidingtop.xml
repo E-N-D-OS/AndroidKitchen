@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent">
+
+	<LinearLayout
+		android:orientation="vertical"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:id="@+id/mainst">
+
+		<LinearLayout
+			android:orientation="horizontal"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent">
+
+			<Button
+				android:layout_width="wrap_content"
+				android:layout_height="match_parent"
+				android:text="Main"
+				android:layout_weight="1.0"
+				android:background="#FFAB00"
+				android:textColor="#FFFFFF"/>
+
+			<Button
+				android:layout_width="wrap_content"
+				android:layout_height="match_parent"
+				android:text="State"
+				android:layout_weight="1.0"
+				android:background="#FF0F00"
+				android:textColor="#FFFFFF"/>
+
+		</LinearLayout>
+
+	</LinearLayout>
+
+	<LinearLayout
+		android:orientation="vertical"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:visibility="gone"
+		android:id="@+id/dragst">
+
+		<LinearLayout
+			android:orientation="horizontal"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent">
+
+			<Button
+				android:layout_width="wrap_content"
+				android:layout_height="match_parent"
+				android:text="drag"
+				android:layout_weight="1.0"
+				android:background="#393939"
+				android:textColor="#FFFFFF"/>
+
+			<Button
+				android:layout_width="wrap_content"
+				android:layout_height="match_parent"
+				android:text="state"
+				android:layout_weight="1.0"
+				android:background="#5C5858"
+				android:textColor="#FFFFFF"/>
+
+		</LinearLayout>
+
+	</LinearLayout>
+
+	<LinearLayout
+		android:orientation="vertical"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:visibility="gone"
+		android:id="@+id/flistst">
+
+		<LinearLayout
+			android:orientation="horizontal"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent">
+
+			<Button
+				android:layout_width="wrap_content"
+				android:layout_height="match_parent"
+				android:text="FileList"
+				android:layout_weight="1.0"
+				android:background="#FFAB00"
+				android:textColor="#FFFFFF"/>
+
+			<Button
+				android:layout_width="wrap_content"
+				android:layout_height="match_parent"
+				android:text="state"
+				android:layout_weight="1.0"
+				android:background="#FF0F00"
+				android:textColor="#FFFFFF"/>
+
+		</LinearLayout>
+
+	</LinearLayout>
+
+	<LinearLayout
+		android:orientation="vertical"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:visibility="gone"
+		android:id="@+id/plistst">
+
+		<LinearLayout
+			android:orientation="horizontal"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent">
+
+			<Button
+				android:layout_width="wrap_content"
+				android:layout_height="match_parent"
+				android:text="app"
+				android:layout_weight="1.0"
+				android:background="#FFAB00"
+				android:textColor="#FFFFFF"/>
+
+			<Button
+				android:layout_width="wrap_content"
+				android:layout_height="match_parent"
+				android:text="state"
+				android:layout_weight="1.0"
+				android:background="#FF0F00"
+				android:textColor="#FFFFFF"/>
+
+		</LinearLayout>
+
+	</LinearLayout>
+
+</RelativeLayout>
+

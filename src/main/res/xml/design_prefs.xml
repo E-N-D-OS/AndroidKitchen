@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+	xmlns:android="http://schemas.android.com/apk/res/android">
+
+	<PreferenceCategory
+		android:title="@string/settings"/>
+
+    <CheckBoxPreference
+		android:icon="@drawable/folder"
+        android:key="@string/k_vib"
+        android:summary="@string/vib_summary"
+        android:title="@string/vib_title" />
+
+	<CheckBoxPreference
+		android:icon="@drawable/folder"
+        android:key="@string/k_scrn"
+        android:summary="@string/scrn_summary"
+        android:title="@string/scrn_title" />
+
+    <CheckBoxPreference
+		android:icon="@drawable/folder"
+        android:key="@string/k_font"
+        android:summary="@string/font_summary"
+        android:title="@string/font_title" />
+
+    <CheckBoxPreference
+		android:icon="@drawable/folder"
+        android:key="@string/k_notf"
+        android:summary="@string/font_summary"
+        android:title="@string/font_title" />
+	
+	<ListPreference
+		android:key="@string/k_adgravity"
+		android:title="@string/theme_title"
+		android:summary="@string/theme_summary"
+		android:defaultValue="bottom"
+		android:entries="@array/theme"
+		android:entryValues="@array/v_gravity"
+		android:dialogTitle="@string/theme_dialogTitle" />
+	
+	<ListPreference
+		android:key="@string/k_theme"
+		android:title="@string/theme_title"
+		android:summary="@string/theme_summary"
+		android:defaultValue="default"
+		android:entries="@array/theme"
+		android:entryValues="@array/v_theme"
+		android:dialogTitle="@string/theme_dialogTitle" />
+
+</PreferenceScreen>

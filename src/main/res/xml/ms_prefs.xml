@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<preference-headers xmlns:android="http://schemas.android.com/apk/res/android">
+    <header
+        android:fragment="ru.unpro.apktool.ui.settings.SettingsFragment"
+        android:title="title"
+        android:summary="summary">
+		<extra android:name="ad" android:value="s" />
+	</header>
+    <header
+        android:fragment="ru.unpro.apktool.ui.settings.SettingsFragment"
+        android:title="title2"
+        android:summary="s2" >
+        <!-- key/value pairs can be included as arguments for the fragment. -->
+        <extra android:name="ad" android:value="a" />
+    </header>
+</preference-headers>

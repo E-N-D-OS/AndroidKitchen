@@ -1,0 +1,143 @@
+<resources>
+	<string-array name="comp_array">
+		<item>Компилировать</item>
+		<item>Отурыть как папку</item>
+		<item>Назад</item>
+	</string-array>
+	<string-array name="dec_array">
+		<item>Декомпилировать</item>
+		<item>Декомпилировать dex</item>
+		<item>Декомпилировать res</item>
+		<item>Подписать</item>
+		<item>Создать odex</item>
+		<item>Оптимизировать</item>
+		<item>Установить</item>
+		<item>Удалить dex</item>
+		<item>Извлечь META-INF</item>
+		<item>Удалить META-INF</item>
+		<item>Добавить META-INF</item>
+		<item>Импортироват как framework</item>
+		<item>dex2jar</item>
+		<item>jar2dex</item>
+		<item>Назад</item>
+	</string-array>
+	<string-array name="decdex_array">
+		<item>Декомпиляция</item>
+		<item>Добавить в apk с таким же именем</item>
+		<item>Добавить в jar с таким же именем</item>
+		<item>Назад</item>
+	</string-array>
+	<string-array name="deodex_array">
+		<item>Декомпиляция</item>
+		<item>Назад</item>
+	</string-array>
+	<string-array name="longpress_array">
+		<item>Переименовать</item>
+		<item>Удалить</item>
+		<item>Получить доступ</item>
+		<item>Установить как папку с проектами</item>
+		<item>Назад</item>
+	</string-array>
+	<string-array name="repackimg">
+		<item>Собрать (только mt65xx)</item>
+		<item>Собрать (универсальный)</item>
+		<item>Открыть как папку</item>
+		<item>Назад</item>
+	</string-array>
+	<string-array name="Task">
+		<item>Процесс 1</item>
+		<item>Процесс 2</item>
+		<item>Процесс 3</item>
+		<item>Процесс 4</item>
+	</string-array>
+	<string-array name="unpackimg">
+		<item>Разобрать (только mt65xx,нужен рут)</item>
+		<item>Разобрать (универсальный,нужен рут)</item>
+		<item>Назад</item>
+	</string-array>
+	<string name="about">О приложении</string>
+	<string name="add_finish">Добавление завершено!</string>
+	<string name="adding">Добавление...</string>
+	<string name="align_finish">Оптимизация завершена!</string>
+	<string name="aligning">Оптимизация...</string>
+	<string name="apk_not_exist">Apk с таким же именем не найдено.</string>
+	<string name="app_name">Android Kitchen</string>
+	<string name="cancel">Отмена</string>
+	<string name="compressing">Сжатие...</string>
+	<string name="copy">Копировать</string>
+	<string name="cost_time">Время операции:</string>
+	<string name="declaration">Отказ от ответственности</string>
+	<string name="decompile_all_finish">Декомпиляция завершена!</string>
+	<string name="decompile_dex_finish">Декомпиляция dex завершена!</string>
+	<string name="decompile_odex_finish">Декомпиляция odex завершена!</string>
+	<string name="decompile_res_finish">Декомпиляция ресурсов завершена!</string>
+	<string name="decompiling">Декомпиляция...</string>
+	<string name="delete_finish">Удаление завершено!</string>
+	<string name="deleting">Удаление...</string>
+	<string name="dir_exist">Папка с META-INF уже существует!</string>
+	<string name="dir_not_exist">Папки с META-INF не найдено!</string>
+	<string name="extracting">Извлечение...</string>
+	<string name="hour">Час(а)</string>
+	<string name="import_finish">Импорт завершён!</string>
+	<string name="importing_framework">Импорт framework...</string>
+	<string name="jar_not_exist">Jar с таким же именем не найден.</string>
+	<string name="keep_screen_on">keep screen on</string>
+	<string name="making">Создание...</string>
+	<string name="minute">мин.</string>
+	<string name="never_remind">Не показывать снова</string>
+	<string name="new_name">Новое имя:</string>
+	<string name="notify">notify after operation</string>
+	<string name="ok">Ок</string>
+	<string name="op_done">Операция завершена!</string>
+	<string name="put_background">Скрыть</string>
+	<string name="recompile_finish">Компиляция завершена!</string>
+	<string name="recompiling">Компиляция...</string>
+	<string name="second"> сек.</string>
+	<string name="settings">Настройки</string>
+	<string name="sign_finish">Подпись завершена!</string>
+	<string name="signing">Подпись...</string>
+	<string name="vibration">vibrate after operation</string>
+	<string name="want_to_delete">Вы действительно хотите удалить?</string>
+	<string name="want_to_exit">Вы уверены что хотите выйти?</string>
+	<string name="white_background">white background</string>
+	<string name="yes">Да</string>
+	<string name="no">Нет</string>
+	<string name="nofreetask">Нет свободных процессов!</string>
+	<string name="cur_task_not_run">Этот процесс не активен.</string>
+	<string name="agreement">Я не виноват если что-то пойдёт не так ;)</string>
+	<string name="directory_no_permission">Нет доступа к этой  папке</string>
+	<string name="warning">Внимание!</string>
+	<string name="data_not_in_sdcard">Could not find program data in /sdcard,if you have put it in a different path,please long press the &quot;apktool&quot; folder and select &quot;set as apktool data folder&quot; before any operation.</string>
+	<string name="wrap_msg">wrap output msg</string>
+	<string-array name="java">
+		<item>Компилировать</item>
+		<item>Назад</item>
+	</string-array>
+	<string-array name="Class">
+		<item>Запустить</item>
+		<item>Назад</item>
+	</string-array>
+	<string name="toast_message">Это тост</string>
+	<string name="running">Running...</string>
+	<string name="make_rom">This is a testing function,which aims at making a update.zip for recovery. Put boot.img in apktool data folder if you want to add it. When the operation has finished, a folder named rom will be created in apktool data folder.Maybe you need to edit META-INF/com/google/androd/updater-script.You need to create update.zip youself.Just zip all files in rom folder.</string>
+	<string name="making_rom">ROM making,will take some time...</string>
+	<string name="k_wrap">wrap</string>
+	<string name="wrap_title">TW</string>
+	<string name="wrap_summary">TS</string>
+	<string name="k_vib">vib</string>
+	<string name="k_adgravity">adgravity</string>
+	<string name="k_theme">theme</string>
+	<string name="k_font">font</string>
+	<string name="k_notf">notf</string>
+	<string name="k_scrn">screen</string>
+	<string name="vib_title">Вибрация</string>
+	<string name="vib_summary">Вкл вибрацию при завершении операции</string>
+	<string name="scrn_title">Спящий режим</string>
+	<string name="scrn_summary">Не выключать экран</string>
+	<string name="theme_title">Тема</string>
+	<string name="theme_summary">Выберите тему на ваш вкус ;)</string>
+	<string name="theme_dialogTitle">Выберите тему</string>
+	<string name="font_title">Шрифт</string>
+	<string name="font_summary">Использовать другой шрифт</string>
+	<string name="choose_action">Выберите действие</string>
+</resources>

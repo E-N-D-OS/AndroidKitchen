@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<color name="colorPrimary">#2196F3</color>
+	<color name="colorPrimaryDark">#ff1e88e5</color>
+	<color name="colorPrimaryDark2">#ff1976d2</color>
+	<color name="colorAccent">#FFFFFF</color>
+	<color name="colorText">#FFFFFF</color>
+	<color name="red5">#fff44336</color>
+	<color name="red6">#ffe53935</color>
+	<color name="red7">#ffd32f2f</color>
+	<color name="dorange5">#ffff5722</color>
+	<color name="dorange6">#fff4511e</color>
+	<color name="dorange7">#ffe64a19</color>
+	<color name="yellow5">#ffffeb3b</color>
+	<color name="yellow6">#fffdd835</color>
+	<color name="yellow7">#fffbc02d</color>
+	<color name="bluegrey5">#ff607d8b</color>
+	<color name="bluegrey6">#ff546e7a</color>
+	<color name="bluegrey7">#ff455a64</color>
+	<color name="pink5">#ffe91e63</color>
+	<color name="pink6">#ffe91e63</color>
+	<color name="pink7">#ffd81b60</color>
+	<color name="grey5">#ff9e9e9e</color>
+	<color name="grey6">#ff757575</color>
+	<color name="grey7">#ff616161</color>
+	<color name="white0">#FFFFFF</color>
+	<color name="white1">#EEEEEE</color>
+	<color name="white2">#DDDDDD</color>
+	<color name="black0">#555555</color>
+	<color name="black1">#404040</color>
+	<color name="black2">#202020</color>
+</resources>

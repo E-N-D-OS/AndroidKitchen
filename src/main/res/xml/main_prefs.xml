@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" android:title="Юридическая информация" android:key="legal_screen">
+	<CheckBoxPreference
+		android:icon="@drawable/folder"
+        android:key="@string/k_wrap"
+        android:summary="@string/wrap_summary"
+        android:title="@string/wrap_title" />
+	<Preference android:title="Дизайн" android:key="copyright">
+		<intent android:fragment="ru.unpro.settings.DesignPrefs" />
+	</Preference>
+	<Preference android:title="Лицензия" android:key="license">
+		<intent android:action="android.settings.LICENSE" />
+	</Preference>
+	<Preference android:title="Условия использования" android:key="terms">
+		<intent android:action="android.settings.TERMS" />
+	</Preference>
+	<Preference android:title="Системная лицензия WebView" android:key="webview_license">
+		<intent android:action="android.settings.WEBVIEW_LICENSE" />
+	</Preference>
+	<Preference android:title="Обои" android:key="wallpaper_attributions" android:summary="Спутниковые фотографии:
+		© CNES 2014/Astrium, DigitalGlobe, Bluesky" />
+</PreferenceScreen>

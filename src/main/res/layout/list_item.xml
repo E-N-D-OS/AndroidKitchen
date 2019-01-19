@@ -26,6 +26,7 @@
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:gravity="center_vertical"
+			android:textColor="#FFFFFF"
 			android:textSize="16dp"/>
 
 		<TextView
@@ -33,6 +34,7 @@
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:gravity="center_vertical"
+			android:textColor="#CACACA"
 			android:textSize="12dp"/>
 
 	</LinearLayout>

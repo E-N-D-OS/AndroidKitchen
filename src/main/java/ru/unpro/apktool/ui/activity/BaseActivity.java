@@ -4,6 +4,7 @@ import android.annotation.*;
 import android.app.*;
 import android.content.*;
 import android.content.pm.*;
+import android.database.sqlite.*;
 import android.graphics.*;
 import android.graphics.drawable.*;
 import android.os.*;
@@ -28,6 +29,7 @@ import java.text.*;
 import java.util.*;
 import ru.unpro.apktool.*;
 import ru.unpro.apktool.adapter.*;
+import ru.unpro.apktool.ui.dialogs.*;
 import ru.unpro.apktool.ui.settings.*;
 import ru.unpro.apktool.util.*;
 
@@ -37,7 +39,6 @@ import android.text.ClipboardManager;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
 import ru.unpro.apktool.adapter.Adapter;
-import ru.unpro.apktool.ui.dialogs.*;
 
 @SuppressWarnings("deprecation")
 @SuppressLint("HandlerLeak")
@@ -46,12 +47,20 @@ public class BaseActivity extends AppCompatActivity {
 	int adgravity;
 	private PackageManager pm;
 	private List<AppDetail> apps;
-	static int count = 0;
-	MyHandler myHandler = new MyHandler();
-	private TextView tvpath;
-	private ListView lvFiles;
+	int count = 0;
+	MyHandler myHandler;
+	TextView tvpath;
+	BottomSheetDialog DlgBtn,
+					  DlgSlct;
+	
+	ArrayList<Items> ArrItems = new ArrayList<Items>();
+    OptionAdapter OpAd;
+	DBHelper dbHelper;
+	
+	ListView lvFiles;
 	PowerManager powerManager;
 	WakeLock wakeLock;
+	LinearLayout mst, dst, flst, plst;
 	
 	String  apicode = String.valueOf(android.os.Build.VERSION.SDK_INT),
 			patch = Environment.getExternalStorageDirectory().getAbsolutePath(),
@@ -60,20 +69,46 @@ public class BaseActivity extends AppCompatActivity {
 			ptlv,
 			olv = "OpListView",
 			WorkPath = "/data/local/AndroidKitchen",
-			uri;
+			uri,
+			gp;
 			
-	private static final int DECODE = 1,COMPILE = 2,DEODEX = 3,DECDEX = 4,LONGPRESS = 5,UNPACKIMG = 6,REPACKIMG = 7,TASK = 8,JAVA = 9,CLASS = 10;
-	private SlidingUpPanelLayout mLayout;
-	private Window WA;
-	private WindowManager.LayoutParams WL;
-	enum fileType { FOLDER, NFILE, APKFILE, ODEXFILE, TEXTFILE, MANIFEST, SMALI, IMGFILE, PIC, PROJECT };
-	boolean tasks[] = new boolean[] { false, false, false, false }, pmlist, fmlist;
-	ProgressDialog dialogs[] = new ProgressDialog[4], myDialog;
+	final int DECODE = 1,
+			  COMPILE = 2,
+			  DEODEX = 3,
+			  DECDEX = 4,
+			  LONGPRESS = 5,
+			  UNPACKIMG = 6,
+			  REPACKIMG = 7,
+			  TASK = 8,
+			  JAVA = 9,
+			  CLASS = 10;
+			  
+	SlidingUpPanelLayout mLayout;
+	Window WA;
+	WindowManager.LayoutParams WL;
+	
+	enum fileType { FOLDER,
+					NFILE,
+					APKFILE,
+					ODEXFILE,
+					TEXTFILE,
+					MANIFEST,
+					SMALI,
+					IMGFILE,
+					PIC,
+					PROJECT };
+	
+	boolean tasks[] = new boolean[] { false, false, false, false },
+			pmlist,
+			fmlist;
+			
+	ProgressDialog dialogs[] = new ProgressDialog[4],
+				   myDialog;
+				   
 	File currentParent;
 	File[] currentFiles;
 	Context context = BaseActivity.this;
 	SharedPreferences prefs;
-	String gp;
 	
 	@Override
 	protected void onStart()
@@ -88,8 +123,6 @@ public class BaseActivity extends AppCompatActivity {
 		gp = prefs.getString(getString(R.string.k_theme), "Dark");
 		int theme = SettingsLoader.loadTheme(gp);
 		setTheme(theme);
-		SharedPreferences.Editor editor = prefs.edit();
-
 		//Проверка рут-доступа
 		if (new File("/system/bin/su").exists()
 			|| new File("/system/xbin/su").exists())
@@ -97,6 +130,8 @@ public class BaseActivity extends AppCompatActivity {
 		else {
 			shell = "su ";
 		}
+		//--------------------
+		
 		// shell += new String("LANG=") +
 		// getResources().getConfiguration().locale.toString() + ".UTF-8 ";
 		super.onCreate(savedInstanceState);
@@ -105,86 +140,83 @@ public class BaseActivity extends AppCompatActivity {
 			.getSystemService(Context.POWER_SERVICE);
 		this.wakeLock = this.powerManager.newWakeLock(
 			PowerManager.FULL_WAKE_LOCK, "My Lock");
-
-		//Диалог с ООО
-		if (!(new File("/data/data/per.pqy.apktool/tag").exists())) {
-			AlertDialog.Builder b1 = new AlertDialog.Builder(context);
-			b1.setTitle(getString(R.string.declaration)).setMessage(
-				getString(R.string.agreement));
-			b1.setPositiveButton(getString(R.string.ok), null);
-			b1.setNeutralButton((getString(R.string.never_remind)),
-				new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						RunExec.Cmd(shell,
-									" mkdir  /data/data/per.pqy.apktool/tag");
-					}
-				});
-			b1.create().show();
-		}
-
+		dbHelper = new DBHelper(this);
+		ArrItems = DBTools.LoadFromBD(dbHelper,ArrItems);
+		OpAd = new OptionAdapter(context,ArrItems);
+		
 		//Первый запуск
-		if (!new File("/data/data/per.pqy.apktool/apktool").exists()) {
-			if (new File("/sdcard/apktool").exists()) {
+		if (!new File(WorkPath).exists()) {
+			DBTools.LoadToBD(dbHelper);
+			if (new File("/sdcard/AKData.zip").exists()) {
 				RunExec.Cmd(shell, "rm /data/data/per.pqy.apktool/apktool");
 				RunExec.Cmd(shell, "ln -s /sdcard/apktool /data/data/per.pqy.apktool/apktool");
 				extractData();
 			} else {
-				AlertDialog.Builder b1 = new AlertDialog.Builder(context);
-				b1.setTitle(getString(R.string.warning)).setMessage(getString(R.string.data_not_in_sdcard));
-				b1.setPositiveButton(getString(R.string.ok), null);
-				b1.create().show();
+				BottomSheetDialog ad = BottomSheetBuilder.build(context, R.string.warning,R.string.data_not_in_sdcard,R.string.ok);
+				ad.show();
 			}
+			RunExec.Cmd(shell,"mkdir "+WorkPath);
+		}
+		//Диалог с ООО
+		if (!(new File("/data/data/per.pqy.apktool/tag").exists())) 
+		{
+			BottomSheetDialog ad = BottomSheetBuilder.build(context, R.string.declaration,R.string.agreement,R.string.ok,R.string.never_remind);
+			ad.show();
 		}
 		//final StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
 		//StrictMode.setVmPolicy(builder.build());
 		setContentView(R.layout.main);
-		final LinearLayout mst = findViewById(R.id.mainst);
-		final LinearLayout dst = findViewById(R.id.dragst);
-		final LinearLayout flst = findViewById(R.id.flistst);
-		final LinearLayout plst = findViewById(R.id.plistst);
-		lvFiles = this.findViewById(R.id.files);
-		tvpath = this.findViewById(R.id.tvpath);
+		//Поиск элементов
+		mst = findViewById(R.id.mainst);
+		dst = findViewById(R.id.dragst);
+		flst = findViewById(R.id.flistst);
+		plst = findViewById(R.id.plistst);
+		lvFiles = findViewById(R.id.files);
+		tvpath = findViewById(R.id.tvpath);
 		setSupportActionBar((Toolbar) findViewById(R.id.main_toolbar));
 		mLayout = findViewById(R.id.sliding_layout);
-		loadFL();
+		//---------------
+		
+		loadFL(lvFiles);
 		mLayout.addPanelSlideListener(new PanelSlideListener() {
-				@Override
-				public void onPanelStateChanged(View panel, PanelState previousState, PanelState newState) {
-					if(newState==PanelState.COLLAPSED){
-						mst.setVisibility(View.VISIBLE);
-						dst.setVisibility(View.GONE);
+			@Override
+			public void onPanelStateChanged(View panel, PanelState previousState, PanelState newState) 
+			{
+				if (newState==PanelState.COLLAPSED){
+					mst.setVisibility(View.VISIBLE);
+					dst.setVisibility(View.GONE);
+					plst.setVisibility(View.GONE);
+					flst.setVisibility(View.GONE);
+				}
+				else if(newState==PanelState.DRAGGING){
+					mst.setVisibility(View.GONE);
+					dst.setVisibility(View.VISIBLE);
+					plst.setVisibility(View.GONE);
+					flst.setVisibility(View.GONE);
+				}
+				else if(newState==PanelState.EXPANDED){
+					mst.setVisibility(View.GONE);
+					dst.setVisibility(View.GONE);
+					if(prefs.getString(olv, ptlv)=="plist"){
+						plst.setVisibility(View.VISIBLE);
+						flst.setVisibility(View.GONE);}
+					else{
 						plst.setVisibility(View.GONE);
-						flst.setVisibility(View.GONE);
-					}
-					else if(newState==PanelState.DRAGGING){
-						mst.setVisibility(View.GONE);
-						dst.setVisibility(View.VISIBLE);
-						plst.setVisibility(View.GONE);
-						flst.setVisibility(View.GONE);
-					}
-					else if(newState==PanelState.EXPANDED){
-						mst.setVisibility(View.GONE);
-						dst.setVisibility(View.GONE);
-						if(prefs.getString(olv, ptlv)=="plist"){
-							plst.setVisibility(View.VISIBLE);
-							flst.setVisibility(View.GONE);}
-						else{
-							plst.setVisibility(View.GONE);
-							flst.setVisibility(View.VISIBLE);
-						}
+						flst.setVisibility(View.VISIBLE);
 					}
 				}
-
-				@Override
-				public void onPanelSlide(View panel, float slideOffset) {
-				}});
+			}
+			@Override
+			public void onPanelSlide(View panel, float slideOffset) 
+			{}
+		});
         mLayout.setFadeOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View view) {
-					mLayout.setPanelState(PanelState.COLLAPSED);
-				}
-			});
+			@Override
+			public void onClick(View view) 
+			{
+				mLayout.setPanelState(PanelState.COLLAPSED);
+			}
+		});
 		BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(
 			new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -193,23 +225,25 @@ public class BaseActivity extends AppCompatActivity {
 					switch (item.getItemId()) {
 						case R.id.action_files:
 							item.setChecked(true);
-							loadFL();
+							loadFL(lvFiles);
 							break;
 						case R.id.action_app:
 							item.setChecked(true);
-							loadPM();
+							loadPM(lvFiles);
 							break;
 						case R.id.action_mail:
+							item.setChecked(true);
 							break;
 					}
 					return false;
 				}
-			});
+			}
+		);
 	}
 	
 	//Загрузка списка файлов
-	public void loadFL(){
-		SharedPreferences prefs = PreferenceManager
+	public void loadFL(final ListView lv){
+		prefs = PreferenceManager
 			.getDefaultSharedPreferences(context);
 		SharedPreferences.Editor editor = prefs.edit();
 		ptlv = "flist";
@@ -220,14 +254,13 @@ public class BaseActivity extends AppCompatActivity {
 			root = new File("/");
 		currentParent = root;
 		currentFiles = currentParent.listFiles();
-		inflateListView(currentFiles);
-		lvFiles.setOnItemClickListener(new OnItemClickListener() {
+		inflateListView(currentFiles,lv);
+		lv.setOnItemClickListener(new OnItemClickListener() {
 				@Override
 				public void onItemClick(AdapterView<?> adapterView, View view,
 										int position, long id) {
 					//builder.detectFileUriExposure();
 					uri = currentFiles[position].getPath();
-
 					if (uri.contains("//"))
 						uri = RunExec.removeRepeatedChar(uri);
 					if (currentFiles[position].isFile()) {
@@ -272,11 +305,11 @@ public class BaseActivity extends AppCompatActivity {
 					} else {
 						currentParent = currentFiles[position];
 						currentFiles = tem;
-						inflateListView(currentFiles);
+						inflateListView(currentFiles,lv);
 					}
 				}
 			});
-		lvFiles.setOnItemLongClickListener(new OnItemLongClickListener() {
+		lv.setOnItemLongClickListener(new OnItemLongClickListener() {
 				@Override
 				public boolean onItemLongClick(AdapterView<?> arg0, View view,
 											   int position, long id) {
@@ -284,8 +317,8 @@ public class BaseActivity extends AppCompatActivity {
 					if (uri.contains("//"))
 						uri = RunExec.removeRepeatedChar(uri);
 					//showDialog(LONGPRESS);
-					BottomSheetDialog mBSD = BottomSheetBuilder.build(context, R.layout.settings);
-					mBSD.show();
+					BottomSheetDialog dl = BottomSheetBuilder.build(context, R.string.adding,OpAd);
+					dl.show();
 					return true;
 				}
 			});
@@ -388,7 +421,7 @@ public class BaseActivity extends AppCompatActivity {
 				}
 				else
 					msgDialog.setMessage(bundle.getString("output"));
-				msgDialog.setTitle(tmp_str)
+					msgDialog.setTitle(tmp_str)
 					.setPositiveButton(getString(R.string.ok), null)
 					.setNeutralButton((getString(R.string.copy)),
 					new DialogInterface.OnClickListener() {
@@ -404,12 +437,12 @@ public class BaseActivity extends AppCompatActivity {
 				WA = AD.getWindow();
 				WL = WA.getAttributes();
 				WL.gravity = adgravity;
-
+				WA.setBackgroundDrawable(new ColorDrawable(Color.BLACK));
 				WA.setLayout(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
 				WA.setAttributes(WL);
 				AD.show();
 				currentFiles = currentParent.listFiles();
-				inflateListView(currentFiles);
+				inflateListView(currentFiles,lvFiles);
 			}
 		}
 
@@ -547,7 +580,7 @@ public class BaseActivity extends AppCompatActivity {
 		WA = myDialog.getWindow();
 		WL = WA.getAttributes();
 		WL.gravity = adgravity;
-
+		WA.setBackgroundDrawable(new ColorDrawable(Color.BLACK));
 		WA.setLayout(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
 		WA.setAttributes(WL);
 		myDialog.setMessage(message);
@@ -562,7 +595,6 @@ public class BaseActivity extends AppCompatActivity {
 					myDialog.dismiss();
 				}
 			});
-		
 		  myDialog.setButton(DialogInterface.BUTTON_NEGATIVE,
 		  getString(R.string.cancel), new DialogInterface.OnClickListener() {
 		  @Override public void onClick(DialogInterface dialog, int which) {
@@ -577,7 +609,7 @@ public class BaseActivity extends AppCompatActivity {
 
 	@SuppressWarnings("unchecked")
 	@SuppressLint("SimpleDateFormat")
-	private void inflateListView(File[] files) {
+	private void inflateListView(File[] files,ListView lv) {
 		List<Map<String, Object>> listItems = new ArrayList<Map<String, Object>>();
 		Arrays.sort(files, new FileComparator());
 
@@ -650,13 +682,10 @@ public class BaseActivity extends AppCompatActivity {
 						+ "   " + strSize);
 			else
 				listItem.put("modify", dateFormat.format(new Date(modTime)));
-
-			listItems.add(listItem);
-		}
-
+			listItems.add(listItem);}
 		Adapter adapter = new Adapter(this, listItems, R.layout.list_item,
-				new String[] { "filename", "icon", "modify" }, new int[] {
-						R.id.file_name, R.id.icon, R.id.file_modify });
+			new String[] { "filename", "icon", "modify" }, new int[] {
+			R.id.file_name, R.id.icon, R.id.file_modify });
 		lvFiles.setAdapter(adapter);
 		tvpath.setText(currentParent.getAbsolutePath());
 	}
@@ -678,6 +707,7 @@ public class BaseActivity extends AppCompatActivity {
 		AlertDialog ADTASK = exitDialog.create();
 		WA = ADTASK.getWindow();
 		WL = WA.getAttributes();
+		WA.setBackgroundDrawable(new ColorDrawable(Color.BLACK));
 		WL.gravity = adgravity;
 		WA.setLayout(LayoutParams.FILL_PARENT,LayoutParams.WRAP_CONTENT);
 		WA.setAttributes(WL);
@@ -687,20 +717,25 @@ public class BaseActivity extends AppCompatActivity {
 				ADTASK.show();
 			} else {
 			try {
-				if (!currentParent.getCanonicalPath().equals("/")) {
-					currentParent = currentParent.getParentFile();
-					currentFiles = currentParent.listFiles();
-					inflateListView(currentFiles);
-				} else {
-					if (mLayout != null &&
-						(mLayout.getPanelState() == PanelState.EXPANDED || mLayout.getPanelState() == PanelState.ANCHORED)) {
-						mLayout.setPanelState(PanelState.COLLAPSED);
-					} else {
-						ADTASK.show();
+				if (!currentParent.getCanonicalPath().equals("/"))
+					{
+						currentParent = currentParent.getParentFile();
+						currentFiles = currentParent.listFiles();
+						inflateListView(currentFiles,lvFiles);
+					} 
+				else
+					{
+						if (mLayout != null &&
+							(mLayout.getPanelState() == PanelState.EXPANDED || mLayout.getPanelState() == PanelState.ANCHORED))
+							{
+								mLayout.setPanelState(PanelState.COLLAPSED);
+							}
+						else 
+							{
+								ADTASK.show();
 					}
 				}
-			} catch (Exception localException) {
-			}
+			} catch (Exception localException) {}
 		}
 		return false;
 	}
@@ -737,6 +772,7 @@ public class BaseActivity extends AppCompatActivity {
 				AlertDialog ADABT = aboutDialog.create();
 				WA = ADABT.getWindow();
 				WL = WA.getAttributes();
+				WA.setBackgroundDrawable(new ColorDrawable(Color.BLACK));
 				WL.gravity = adgravity;
 				WA.setLayout(LayoutParams.FILL_PARENT,LayoutParams.WRAP_CONTENT);
 				WA.setAttributes(WL);
@@ -859,7 +895,6 @@ public class BaseActivity extends AppCompatActivity {
 				WA = ADPREFS.getWindow();
 				WL = WA.getAttributes();
 				WL.gravity = adgravity;
-				
 				WA.setLayout(LayoutParams.FILL_PARENT,LayoutParams.WRAP_CONTENT);
 				WA.setAttributes(WL);
 				ADPREFS.show();
@@ -982,7 +1017,7 @@ public class BaseActivity extends AppCompatActivity {
 	//Обновление списка файлов
 	public void refreshFL() {
 		currentFiles = currentParent.listFiles();
-		inflateListView(currentFiles);
+		inflateListView(currentFiles,lvFiles);
 	}
 	
 	//Загрузка данных приложений
@@ -1006,7 +1041,7 @@ public class BaseActivity extends AppCompatActivity {
 	}
 	
 	//Загрузка списка приложений
-	public void loadPM()
+	public void loadPM(ListView lv)
 	{
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 		SharedPreferences.Editor editor = prefs.edit();
@@ -1014,9 +1049,6 @@ public class BaseActivity extends AppCompatActivity {
 		editor.putString(olv, ptlv);
 		editor.commit();
 		loadApps();
-		ListView list;
-		list = findViewById(R.id.files);
-
 		ArrayAdapter<AppDetail> adapter = new ArrayAdapter<AppDetail>(this, 
 																	  R.layout.list_item, 
 																	  apps) {
@@ -1041,8 +1073,8 @@ public class BaseActivity extends AppCompatActivity {
 			}
 		};
 
-		list.setAdapter(adapter); 
-		list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+		lv.setAdapter(adapter); 
+		lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 				@Override
 				public void onItemClick(AdapterView<?> av, View v, int pos,
 										long id)
@@ -1051,7 +1083,7 @@ public class BaseActivity extends AppCompatActivity {
 					BaseActivity.this.startActivity(i);
 				}
 			});
-		list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+		lv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 				@Override
 				public boolean onItemLongClick(AdapterView<?> av, View v, int pos,
 										long id)
@@ -1062,6 +1094,29 @@ public class BaseActivity extends AppCompatActivity {
 					return true;
 				}
 			});
+	}
+	
+	//Загрузка диалогов
+	public void loadDlg()
+	{
+		ListView DlgList = DlgSlct.findViewById(R.id.dlg_list);
+		// Создаём адаптер ArrayAdapter, чтобы привязать массив к ListView
+		// Привяжем массив через адаптер к ListView
+		DlgList.setAdapter(OpAd);
+
+		/*Прослушиваем нажатия клавиш
+		editText.setOnKeyListener(new View.OnKeyListener() {
+				public boolean onKey(View v, int keyCode, KeyEvent event) {
+					if (event.getAction() == KeyEvent.ACTION_DOWN)
+						if (keyCode == KeyEvent.KEYCODE_ENTER) {
+							catNames.add(0, editText.getText().toString());
+							adapter.notifyDataSetChanged();
+							editText.setText("");
+							return true;
+						}
+					return false;
+				}
+			});*/
 	}
 	
 	//Создание диалогов
@@ -1125,8 +1180,8 @@ public class BaseActivity extends AppCompatActivity {
 										+ uri.substring(0, uri.length() - 3)
 										+ "odex'";
 									threadWork(context,
-											   getString(R.string.making),
-											   command4, 6);
+											getString(R.string.making),command4, 
+											6);
 									break;
 
 								case 5:
@@ -1138,8 +1193,8 @@ public class BaseActivity extends AppCompatActivity {
 										+ uri.substring(0, uri.length() - 4)
 										+ "_zipalign.apk'";
 									threadWork(context,
-											   getString(R.string.aligning), command5,
-											   8);
+											getString(R.string.aligning),command5,
+											8);
 									break;
 								case 6:
 									/*Intent intent = new Intent(Intent.ACTION_VIEW);
@@ -1306,7 +1361,7 @@ public class BaseActivity extends AppCompatActivity {
 								case 1:
 									currentParent = new File(uri);
 									currentFiles = currentParent.listFiles();
-									inflateListView(currentFiles);
+									inflateListView(currentFiles,lvFiles);
 									break;
 								case 2:
 									return;
@@ -1485,7 +1540,7 @@ public class BaseActivity extends AppCompatActivity {
 																  newName));
 												currentFiles = currentParent
 													.listFiles();
-												inflateListView(currentFiles);
+												inflateListView(currentFiles,lvFiles);
 											}
 										})
 										.setNegativeButton(
@@ -1649,7 +1704,7 @@ public class BaseActivity extends AppCompatActivity {
 								case 2:
 									currentParent = new File(uri);
 									currentFiles = currentParent.listFiles();
-									inflateListView(currentFiles);
+									inflateListView(currentFiles,lvFiles);
 									break;
 								case 3:
 									return;
@@ -1807,4 +1862,24 @@ public class BaseActivity extends AppCompatActivity {
 		}
 		return null;
 	}
+	
+	//Класс для работы с базой данных
+	class DBHelper extends SQLiteOpenHelper
+	{
+		public DBHelper(Context context)
+		{
+			super(context, "menu.db", null, 2);
+		}
+		@Override
+		public void onCreate(SQLiteDatabase db)
+		{
+			db.execSQL("create table optionlist ("
+					   + "id integer,"
+					   + "draw integer,"
+					   + "option text" + ");");
+		}
+		@Override
+		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion){}
+	}
+	//-------------------------------------------
 }

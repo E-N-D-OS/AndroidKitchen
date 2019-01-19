@@ -3,44 +3,42 @@
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="fill_parent"
 	android:layout_height="fill_parent"
-	android:orientation="vertical">
+	android:orientation="vertical"
+	android:background="#313131">
 
 	<RelativeLayout
 		android:id="@+id/borl"
 		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:background="#FF1809"
+		android:layout_height="40dp"
+		android:background="#101010"
 		android:elevation="10dp"
 		android:layout_marginTop="10dp"
 		android:onClick="OpenAppSettings">
 
-		<TextView
-			android:layout_width="match_parent"
+		<ImageView
+			android:src="@drawable/txt_ic"
+			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:text="Основные"
-			android:textAppearance="?android:attr/textAppearanceLarge"
-			android:textColor="#FFFFFF"
-			android:layout_alignParentLeft="true"
-			android:id="@+id/settingsTextView1"
-			android:layout_marginTop="10dp"
-			android:layout_marginLeft="10dp"
-			android:shadowColor="#000000"/>
+			android:id="@+id/settingsImageView1"
+			android:layout_margin="6dp"/>
 
 		<TextView
-			android:layout_width="match_parent"
+			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:text="Настройки приложения"
+			android:text="Переименовать"
+			android:textAppearance="?android:attr/textAppearanceLarge"
 			android:textColor="#FFFFFF"
-			android:layout_below="@id/settingsTextView1"
-			android:layout_marginLeft="15dp"
-			android:layout_marginBottom="10dp"/>
+			android:layout_alignParentLeft="false"
+			android:shadowColor="#000000"
+			android:layout_margin="6dp"
+			android:layout_toRightOf="@id/settingsImageView1"/>
 
 	</RelativeLayout>
 
 	<RelativeLayout
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:background="#FF1809"
+		android:background="#131212"
 		android:elevation="10dp"
 		android:layout_marginTop="10dp"
 		android:onClick="OpenThemeSettings">
@@ -48,30 +46,20 @@
 		<TextView
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:text="Дизайн"
+			android:text="Переместить"
 			android:textAppearance="?android:attr/textAppearanceLarge"
 			android:textColor="#FFFFFF"
 			android:layout_alignParentLeft="true"
 			android:id="@+id/settingsTextView1"
-			android:layout_marginTop="10dp"
-			android:layout_marginLeft="10dp"
-			android:shadowColor="#000000"/>
-
-		<TextView
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:text="Настройки темы и прочего"
-			android:textColor="#FFFFFF"
-			android:layout_below="@id/settingsTextView1"
-			android:layout_marginLeft="15dp"
-			android:layout_marginBottom="10dp"/>
+			android:shadowColor="#000000"
+			android:layout_margin="6dp"/>
 
 	</RelativeLayout>
 
 	<RelativeLayout
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:background="#FF1809"
+		android:background="#111111"
 		android:elevation="10dp"
 		android:layout_marginTop="10dp"
 		android:onClick="OpenApkToolSettings">
@@ -79,25 +67,21 @@
 		<TextView
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:text="ApkTool"
+			android:text="Копировать"
 			android:textAppearance="?android:attr/textAppearanceLarge"
 			android:textColor="#FFFFFF"
 			android:layout_alignParentLeft="true"
 			android:id="@+id/settingsTextView1"
-			android:layout_marginTop="10dp"
-			android:layout_marginLeft="10dp"
-			android:shadowColor="#000000"/>
-
-		<TextView
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:text="Настройки apktool"
-			android:textColor="#FFFFFF"
-			android:layout_below="@id/settingsTextView1"
-			android:layout_marginLeft="15dp"
-			android:layout_marginBottom="10dp"/>
+			android:shadowColor="#000000"
+			android:layout_margin="6dp"/>
 
 	</RelativeLayout>
+
+	<ImageButton
+		android:src="@drawable/ic_check_white_48dp"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:scaleType="matrix"/>
 
 </LinearLayout>
 

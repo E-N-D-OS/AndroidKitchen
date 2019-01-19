@@ -19,7 +19,7 @@ public class PMAdapter extends ListFragment
 		apps = new ArrayList<AppDetail>();
 
 		Intent i = new Intent(Intent.ACTION_MAIN, null);
-		//i.addCategory(Intent.CATEGORY_DEFAULT);
+		i.addCategory(Intent.CATEGORY_DEFAULT);
 
 		List<ResolveInfo> availableActivities = pm.queryIntentActivities(i, 0);
 		for (ResolveInfo ri:availableActivities)
